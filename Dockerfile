@@ -5,10 +5,6 @@ ENV APP_DIR /app
 WORKDIR $APP_DIR
 VOLUME $APP_DIR
 
-#RUN apt remove cmdtest
-#RUN apt remove yarn
-#RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-
 RUN apt-get update && apt-get install -y \
         git \
         wget \
@@ -16,10 +12,15 @@ RUN apt-get update && apt-get install -y \
         zlib1g-dev \
         libxml2-dev \
         zlib1g-dev \
-        libzip-dev \
-        nodejs
+        libzip-dev
 
+# Node
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get update \
+ && apt-get install -y \
+ nodejs
 RUN npm install -g yarn
+
 RUN pecl install apcu
 
 RUN docker-php-ext-install zip
