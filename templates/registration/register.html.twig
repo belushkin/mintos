@@ -1,16 +1,29 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme registrationForm with [
+    'form/form_label.html.twig',
+    'form/form_errors.html.twig'
+] %}
+
 {% block title %}Register{% endblock %}
 
 {% block body %}
     <div id="container" class="container w-25 mt-5">
         <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-        {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+        {{ form_start(registrationForm, {'attr': {'id': 'register'}}) }}
+            <div class="form-group">
+                {{ form_label(registrationForm.email) }}
+                {{ form_errors(registrationForm.email) }}
+                {{ form_widget(registrationForm.email, {'attr': {
+                    "v-model": 'email',
+                    "@input": "checkEmail",
+                    "v-bind:class": "classEmailObject"
+                }}) }}
+            </div>
 
-        <button class="btn btn-primary">Register</button>
+            {{ form_row(registrationForm.plainPassword, {'attr': {"v-model": 'password'}}) }}
+
+            <button class="btn btn-primary">Register</button>
         {{ form_end(registrationForm) }}
     </div>
 
