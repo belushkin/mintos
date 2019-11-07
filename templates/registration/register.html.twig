@@ -13,17 +13,31 @@
         {{ form_start(registrationForm, {'attr': {'id': 'register'}}) }}
             <div class="form-group">
                 {{ form_label(registrationForm.email) }}
-                {{ form_errors(registrationForm.email) }}
-                {{ form_widget(registrationForm.email, {'attr': {
-                    "v-model": 'email',
-                    "@input": "checkEmail",
-                    "v-bind:class": "classEmailObject"
-                }}) }}
+                <email v-if="seen" :message ="message"></email>
+                {% if registrationForm.email.vars.valid==false %}
+                    {{ form_widget(registrationForm.email, {'attr': {
+                        "v-model": 'email',
+                        "@input": "checkEmail",
+                        "valid":"false"
+                    }}) }}
+                {% else %}
+                    {{ form_widget(registrationForm.email, {'attr': {
+                        "v-model": 'email',
+                        "@input": "checkEmail",
+                        "valid":"true"
+                    }}) }}
+                {% endif %}
+
+
             </div>
 
-            {{ form_row(registrationForm.plainPassword, {'attr': {"v-model": 'password'}}) }}
+            <div class="form-group">
+                {{ form_label(registrationForm.plainPassword) }}
+                {{ form_errors(registrationForm.plainPassword) }}
+                {{ form_widget(registrationForm.plainPassword) }}
+            </div>
 
-            <button class="btn btn-primary">Register</button>
+        <button class="btn btn-primary">Register</button>
         {{ form_end(registrationForm) }}
     </div>
 

@@ -9,6 +9,7 @@
 require('../css/app.css');
 
 import Vue from 'vue';
+import Email from './components/Email'
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 // const $ = require('jquery');
@@ -19,42 +20,32 @@ const apiUrl = '/validate?email=';
 
 var app = new Vue({
     el: '#register',
+    components: {Email},
     data: {
-        email: document.querySelector("input[type=text]").value,
-        password: document.querySelector("input[type=password]").value,
-        isEmailInvalid: false
+        email: null,
+        isEmailInvalid: false,
+        message: null,
+        seen: null
     },
-    computed: {
-        classEmailObject: function () {
-            return {
-                "is-invalid": this.isEmailInvalid
-            }
-        }
+    created: function () {
+        this.email = document.querySelector("input[type=text]").value;
+        this.message = this.email;
+        this.seen = document.querySelector("input[type=text]").getAttribute('valid');
     },
     methods: {
         checkEmail: function (e) {
-             console.log(this.email);
-            console.log(e);
-            this.isEmailInvalid = false;
-            if (!this.email) {
-                this.isEmailInvalid = true;
-            } else if (!this.validEmail(this.email)) {
-                this.isEmailInvalid = true;
-                // console.log('specify correct email');
-            }
-            if (!this.isEmailInvalid) {
+            if (this.validEmail(this.email)) {
                 fetch(apiUrl + encodeURIComponent(this.email))
                     .then(res => res.json())
                     .then(res => {
-                        if (res.error) {
-                            console.log('error');
-
+                        if (res.msg == "") {
+                            this.seen = false;
+                            this.isEmailInvalid = false;
                         } else {
-                            console.log('ok!');
+                            this.seen = true;
                         }
                     });
             }
-            // this.isEmailInvalid = true;
             e.preventDefault();
         },
         validEmail: function (email) {
