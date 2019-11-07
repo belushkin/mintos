@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use Symfony\Component\Form\FormError;
 use App\Security\AppAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,9 +12,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use App\Validator\Constraints\EmailDuplicate;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationController extends AbstractController
 {
+
+    const USER_ALREADY_EXISTS = 'User with such email already exists';
+
+    private $validator;
+
+
+    public function __construct( ValidatorInterface $validator)
+    {
+        $this->validator = $validator;
+    }
+
     /**
      * @Route("/register", name="app_register")
      */
@@ -24,6 +40,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
@@ -31,12 +48,11 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            $user->setEmail($form->get('email')->getData());
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-
-            // do anything else you need here, like send an email
 
             return $guardHandler->authenticateUserAndHandleSuccess(
                 $user,
@@ -54,13 +70,26 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/validate", name="app_validate")
      */
-    public function validate(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, AppAuthenticator $authenticator): Response
+    public function validate(Request $request): Response
     {
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $msg = '';
 
+        $violations = $this->validator->validate($request->get('email'), [
+            new EmailDuplicate(),
+        ]);
+        if (0 !== count($violations)) {
+            foreach ($violations as $violation) {
+                $msg = $violation->getMessage();
+            }
         }
+
+        $response = new Response();
+        $response->setContent(json_encode([
+            'msg' => $msg,
+        ]));
+
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
 }

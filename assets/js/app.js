@@ -15,11 +15,13 @@ import Vue from 'vue';
 
 // console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
 
+const apiUrl = '/validate?email=';
+
 var app = new Vue({
     el: '#register',
     data: {
-        email: null,
-        password: null,
+        email: document.querySelector("input[type=text]").value,
+        password: document.querySelector("input[type=password]").value,
         isEmailInvalid: false
     },
     computed: {
@@ -31,13 +33,26 @@ var app = new Vue({
     },
     methods: {
         checkEmail: function (e) {
-            // console.log('ss');
+             console.log(this.email);
+            console.log(e);
             this.isEmailInvalid = false;
             if (!this.email) {
                 this.isEmailInvalid = true;
             } else if (!this.validEmail(this.email)) {
                 this.isEmailInvalid = true;
                 // console.log('specify correct email');
+            }
+            if (!this.isEmailInvalid) {
+                fetch(apiUrl + encodeURIComponent(this.email))
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.error) {
+                            console.log('error');
+
+                        } else {
+                            console.log('ok!');
+                        }
+                    });
             }
             // this.isEmailInvalid = true;
             e.preventDefault();
