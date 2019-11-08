@@ -32,7 +32,11 @@ cd mintos; ./toolbox.sh up
 ./toolbox.sh exec php bin/console doctrine:migrations:migrate
 ./toolbox.sh exec php bin/console doctrine:fixtures:load
 ./toolbox.sh exec yarn install
+./toolbox.sh exec yarn encore dev
 ```
+
+## Default user added from fixtures
+example@email.ua
 
 ## How to run tests
 ```bash
