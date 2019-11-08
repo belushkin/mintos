@@ -14,6 +14,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use App\Validator\Constraints\EmailDuplicate;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -75,6 +77,10 @@ class RegistrationController extends AbstractController
         $msg = '';
 
         $violations = $this->validator->validate($request->get('email'), [
+            new NotBlank([
+                'message' => 'Please enter a email',
+            ]),
+            new Email(),
             new EmailDuplicate(),
         ]);
         if (0 !== count($violations)) {

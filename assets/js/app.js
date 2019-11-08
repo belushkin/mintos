@@ -10,11 +10,7 @@ require('../css/app.css');
 
 import Vue from 'vue';
 import Email from './components/Email'
-
-// Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
-// const $ = require('jquery');
-
-// console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
+import throttle from './throttle.js'
 
 const apiUrl = '/validate?email=';
 
@@ -23,34 +19,49 @@ var app = new Vue({
     components: {Email},
     data: {
         email: null,
-        isEmailInvalid: false,
+        isInvalid: false,
         message: null,
-        seen: null
+        seen: true
+    },
+    computed: {
+        classEmailObject: function () {
+            return {
+                "is-invalid": this.isInvalid
+            }
+        },
+        throttledCheck: function() {
+            let DELAY = 1000;
+            return throttle(this.check, DELAY);
+        }
     },
     created: function () {
         this.email = document.querySelector("input[type=text]").value;
-        this.message = this.email;
-        this.seen = document.querySelector("input[type=text]").getAttribute('valid');
+        this.seen = document.querySelector("input[type=text]").getAttribute('seen');
     },
     methods: {
-        checkEmail: function (e) {
-            if (this.validEmail(this.email)) {
-                fetch(apiUrl + encodeURIComponent(this.email))
-                    .then(res => res.json())
-                    .then(res => {
-                        if (res.msg == "") {
-                            this.seen = false;
-                            this.isEmailInvalid = false;
-                        } else {
-                            this.seen = true;
-                        }
-                    });
-            }
-            e.preventDefault();
+        check: function (e) {
+            fetch(apiUrl + encodeURIComponent(this.email))
+                .then(res => res.json())
+                .then(res => {
+                    if (res.msg == "") {
+                        this.seen = false;
+                        this.isInvalid = false;
+                        this.message = "";
+                    } else {
+                        this.seen = true;
+                        this.isInvalid = true;
+                        this.message = res.msg;
+                    }
+                });
         },
-        validEmail: function (email) {
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return re.test(email);
+        submit: function (e) {
+            if (this.seen === true) {
+                e.stopPropagation();
+                e.preventDefault();
+            } else {
+                return true;
+            }
         }
     }
-})
+});
+

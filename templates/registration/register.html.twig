@@ -8,27 +8,27 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <div id="container" class="container w-25 mt-5">
+    <div id="container" class="container w-25 mt-5" xmlns:v-on="http://www.w3.org/1999/xhtml">
         <h1 class="h3 mb-3 font-weight-normal">Register</h1>
         {{ form_start(registrationForm, {'attr': {'id': 'register'}}) }}
             <div class="form-group">
                 {{ form_label(registrationForm.email) }}
-                <email v-if="seen" :message ="message"></email>
+                <email v-if="seen==true" :message ="message"></email>
                 {% if registrationForm.email.vars.valid==false %}
                     {{ form_widget(registrationForm.email, {'attr': {
                         "v-model": 'email',
-                        "@input": "checkEmail",
-                        "valid":"false"
+                        "@input": "throttledCheck",
+                        "v-bind:class": "classEmailObject",
+                        "seen":"true"
                     }}) }}
                 {% else %}
                     {{ form_widget(registrationForm.email, {'attr': {
                         "v-model": 'email',
-                        "@input": "checkEmail",
-                        "valid":"true"
+                        "@input": "throttledCheck",
+                        "v-bind:class": "classEmailObject",
+                        "seen":"false"
                     }}) }}
                 {% endif %}
-
-
             </div>
 
             <div class="form-group">
@@ -37,7 +37,7 @@
                 {{ form_widget(registrationForm.plainPassword) }}
             </div>
 
-        <button class="btn btn-primary">Register</button>
+            <button v-on:click="submit" class="btn btn-primary">Register</button>
         {{ form_end(registrationForm) }}
     </div>
 
