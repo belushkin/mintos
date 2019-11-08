@@ -9,9 +9,13 @@
         {% endblock %}
     </head>
     <body>
+        {% set current_path = app.request.get('_route') %}
+
         {% block body %}{% endblock %}
         {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+            {% if current_path == "app_register" %}
+                {{ encore_entry_script_tags('app') }}
+            {% endif %}
         {% endblock %}
     </body>
 </html>
