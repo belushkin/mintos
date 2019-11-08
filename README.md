@@ -42,6 +42,14 @@ cd mintos; ./toolbox.sh up
 ### URL of the running app
 http://localhost:8000/
 
+http://localhost:8080 (adminer)
+
+- server: db-mysql
+- username: root
+- password: root
+- db: mintos
+
+
 ## Basic script usage:
 Application has *toolbox.sh* script. It is very easy run, stop, ssh, rebuild, run tests and stop the application.
 
