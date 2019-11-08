@@ -1,14 +1,14 @@
-# Mintos PHP assesment
+# Mintos PHP assessment
 Your task is to create simple RSS reader web application with requirements described in the separate document
 
 ![alt text](./assets/img/image.png)
 
-### Requirements of the assesment:
+### Requirements of the assessment:
 - User registration - form with e-mail and password fields + e-mail verification using ajax.
 - Login form with e-mail address and password
 - RSS feed view
 
-### Technologies used in the assesment
+### Technologies used in the assessment
 - Symfony 4.3
 - Vue.js
 - Docker
