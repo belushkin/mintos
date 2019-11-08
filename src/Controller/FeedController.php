@@ -22,18 +22,23 @@ class FeedController extends AbstractController
      */
     public function index(FeedClient $feedClient, CommonWords $commonWords, FrequencyCalculator $frequencyCalculator): Response
     {
-        $feedClient->setUrl('https://www.theregister.co.uk/software/headlines.atom');
-        $words = $feedClient->getWordsAsString(
-            $feedClient->read()
-        );
+        $top10Words = [];
+        $feedItems  = [];
 
-        $top10Words = $frequencyCalculator->get10FrequentWords(
-            $commonWords->exclude50CommonWords(strtolower($words))
-        );
+         if ($this->getUser()) {
+             $feedClient->setUrl('https://www.theregister.co.uk/software/headlines.atom');
+             $feedItems  = $feedClient->read();
+             $words      = $feedClient->getWordsAsString($feedItems);
+
+             $top10Words = $frequencyCalculator->get10FrequentWords(
+                 $commonWords->exclude50CommonWords(strtolower($words))
+             );
+         }
 
         return $this->render('feed/index.html.twig', [
             'controller_name'   => 'FeedController',
-            'top10words'        => $top10Words
+            'top10words'        => $top10Words,
+            'items'             => $feedItems
         ]);
     }
 

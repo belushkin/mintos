@@ -14,7 +14,12 @@
                 You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
             </div>
         {% endif %}
-
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item" aria-current="page"><a href="{{ path('feed') }}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Login</li>
+            </ol>
+        </nav>
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <div class="form-group">
             <label for="inputEmail">Email</label>
