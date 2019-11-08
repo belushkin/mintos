@@ -1,7 +1,7 @@
 # Mintos PHP assesment
 Your task is to create simple RSS reader web application with requirements described in the separate document
 
-![alt text](./public/assets/img/image.png)
+![alt text](./assets/img/image.png)
 
 ### Requirements of the assesment:
 - User registration - form with e-mail and password fields + e-mail verification using ajax.
