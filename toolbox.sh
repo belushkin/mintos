@@ -56,7 +56,7 @@ function command_boot()
 }
 
 function command_tests(){
-    echo "composer test" |  docker exec -i  mintos_web_1 /bin/bash
+    echo " ./bin/phpunit tests" |  docker exec -i  mintos_web_1 /bin/bash
 }
 
 function command_rebuild() {

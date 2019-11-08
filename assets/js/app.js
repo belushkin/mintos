@@ -40,19 +40,19 @@ var app = new Vue({
     },
     methods: {
         check: function (e) {
-            fetch(apiUrl + encodeURIComponent(this.email))
-                .then(res => res.json())
-                .then(res => {
-                    if (res.msg == "") {
-                        this.seen = false;
-                        this.isInvalid = false;
-                        this.message = "";
-                    } else {
-                        this.seen = true;
-                        this.isInvalid = true;
-                        this.message = res.msg;
-                    }
-                });
+            if (this.email == "") {
+                this.hideError();
+            } else {
+                fetch(apiUrl + encodeURIComponent(this.email))
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.msg == "") {
+                            this.hideError();
+                        } else {
+                            this.showError(res.msg)
+                        }
+                    });
+            }
         },
         submit: function (e) {
             if (this.seen === true) {
@@ -61,6 +61,16 @@ var app = new Vue({
             } else {
                 return true;
             }
+        },
+        hideError: function () {
+            this.seen = false;
+            this.isInvalid = false;
+            this.message = "";
+        },
+        showError: function (msg) {
+            this.seen = true;
+            this.isInvalid = true;
+            this.message = msg;
         }
     }
 });

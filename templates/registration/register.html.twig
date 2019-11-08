@@ -25,14 +25,16 @@
                         "v-model": 'email',
                         "@input": "throttledCheck",
                         "v-bind:class": "classEmailObject",
-                        "seen":"true"
+                        "seen":"true",
+                        "autofocus":"true"
                     }}) }}
                 {% else %}
                     {{ form_widget(registrationForm.email, {'attr': {
                         "v-model": 'email',
                         "@input": "throttledCheck",
                         "v-bind:class": "classEmailObject",
-                        "seen":"false"
+                        "seen":"false",
+                        "autofocus":"true"
                     }}) }}
                 {% endif %}
             </div>

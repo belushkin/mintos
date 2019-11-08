@@ -5,6 +5,14 @@
 {% block body %}
     {% if app.user %}
         <div class="container mt-5">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">Home</li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="{{ path('app_login') }}">Login</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="{{ path('app_register') }}">Register</a></li>
+                    <li class="breadcrumb-item" aria-current="page"><a href="{{ path('app_logout') }}">Logout</a></li>
+                </ol>
+            </nav>
             <div class="row">
                 <div class="col">
                     <h4>10 most frequent words</h4>
